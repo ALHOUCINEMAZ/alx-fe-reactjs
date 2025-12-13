@@ -3,5 +3,5 @@ import TodoList from "../components/TodoList";
 
 test("renders TodoList component", () => {
   render(<TodoList />);
-  expect(screen.getByText(/todo/i)).toBeInTheDocument();
+  expect(screen.getByText("Todo List")).toBeInTheDocument();
 });
