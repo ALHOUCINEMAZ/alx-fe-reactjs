@@ -1,7 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import TodoList from "../components/TodoList";
 
-test("renders TodoList component", () => {
-  render(<TodoList />);
-  expect(screen.getByText("Todo List")).toBeInTheDocument();
+describe("TodoList component", () => {
+  it("renders Todo List", () => {
+    render(<TodoList />);
+    expect(screen.getByText("Todo List")).toBeInTheDocument();
+  });
 });
