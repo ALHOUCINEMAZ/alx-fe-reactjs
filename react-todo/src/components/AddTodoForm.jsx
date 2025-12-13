@@ -1,24 +1,44 @@
-import { useState } from "react";
+import { render, screen, fireEvent } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import TodoList from "../components/TodoList";
 
-export default function AddTodoForm({ addTodo }) {
-  const [text, setText] = useState("");
+describe("TodoList Component", () => {
+  test("renders initial todos", () => {
+    render(<TodoList />);
+    expect(screen.getByText("Learn React")).toBeInTheDocument();
+    expect(screen.getByText("Practice Testing")).toBeInTheDocument();
+  });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!text.trim()) return;
-    addTodo(text);
-    setText("");
-  };
+  test("adds a new todo", () => {
+    render(<TodoList />);
 
-  return (
-    <form onSubmit={handleSubmit} data-testid="add-todo-form">
-      <input
-        data-testid="todo-input"
-        placeholder="Add todo"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      />
-      <button type="submit">Add</button>
-    </form>
-  );
-}
+    const input = screen.getByTestId("todo-input");
+    fireEvent.change(input, { target: { value: "New Todo" } });
+
+    const addButton = screen.getByText("Add");
+    fireEvent.click(addButton);
+
+    expect(screen.getByText("New Todo")).toBeInTheDocument();
+  });
+
+  test("toggles todo completion", () => {
+    render(<TodoList />);
+
+    const todo = screen.getByText("Learn React");
+    expect(todo).toHaveStyle("text-decoration: none");
+
+    fireEvent.click(todo);
+    expect(todo).toHaveStyle("text-decoration: line-through");
+  });
+
+  test("deletes a todo", () => {
+    render(<TodoList />);
+
+    const deleteButtons = screen.getAllByTestId("delete-button");
+    fireEvent.click(deleteButtons[0]);
+
+    expect(
+      screen.queryByText("Learn React")
+    ).not.toBeInTheDocument();
+  });
+});
